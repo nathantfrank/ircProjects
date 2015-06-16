@@ -1,0 +1,24 @@
+{
+  "help":
+          "- Commands - help (displays help message), normal play (starts a game), turn play (starts a turn based game), score (displays standings), standings (displays standings). - actions - guess <letter>, answer <phrase>, join (join turn base game)",
+  "start":
+          ["Has started a game."],
+  "in_game":
+          ["A game has already started."],
+  "win":
+          ["Has won the game."],
+  "wrong":
+          ["Has answered incorrectly."],
+  "not_letter":
+          ["Incorrect value for letter."],
+  "correct":
+          ["Has guessed correctly."],
+  "used":
+          ["Has guessed a previous letter."],
+  "incorrect":
+          ["Has guessed incorrectly."],
+  "join":
+          ["Has joined the game."],
+  "join_now":
+          ["Players please join now."]
+}
