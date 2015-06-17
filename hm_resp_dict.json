@@ -1,12 +1,33 @@
 {
   "help":
-          "- Commands - help (displays help message), normal play (starts a game), turn play (starts a turn based game), score (displays standings), standings (displays standings). - actions - guess <letter>, answer <phrase>, join (join turn base game)",
+          ["--Commands--",
+            "help (displays help message),  normal play (starts a game),  turn play (starts a turn based game)",
+            "normal rules (displays normal game rules),  turn rules (displays turn game rules)",
+            "--actions--",
+            "guess <letter>,  answer <phrase>,  join (join turn base game)"],
+  "normal_rules":
+          ["Normal Rules:",
+            "Free for all,",
+            "First person to guess the phrase is the winner!"],
+  "turn_rules":
+          ["Turn Rules:",
+            "Must join to play,",
+            "Every correct letter guess gives you a point for how many times letter was in phrase.",
+            "Answering phrase correctly gives 5 points.",
+            "Person with most points at the end of the game is the winner!"],
+  "reveal_rules":
+          ["Reveal Rules:",
+            "Free for all,",
+            "Letters are slowly revealed to the players.",
+            "First person to guess the phrase is the winner!"],
   "start":
           ["Has started a game."],
   "in_game":
           ["A game has already started."],
   "win":
           ["Has won the game."],
+  "right":
+          ["Has answer correctly."],
   "wrong":
           ["Has answered incorrectly."],
   "not_letter":
@@ -20,5 +41,7 @@
   "join":
           ["Has joined the game."],
   "join_now":
-          ["Players please join now."]
+          ["Players please join now."],
+  "leave":
+          ["Has left the game."]
 }
