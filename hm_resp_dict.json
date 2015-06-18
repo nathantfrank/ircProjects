@@ -1,12 +1,25 @@
 {
   "help":
-          ["--Commands--\nhelp (displays help message),  normal play (starts a game),  turn play (starts a turn based game),  scores (shows lifetime points)\nnormal rules (displays normal game rules),  turn rules (displays turn game rules),  reveal rules (display reveal game rules)\n--actions--\nguess <letter>,  answer <phrase>,  join (join turn base game), leave (exit yourself from current game)"],
+          ["--Commands--",
+            "help (displays help message),  normal play (starts a game),  turn play (starts a turn based game),  scores (shows lifetime points)",
+            "normal rules (displays normal game rules),  turn rules (displays turn game rules),  reveal rules (display reveal game rules)",
+            "--actions--",
+            "guess <letter>,  answer <phrase>,  join (join turn base game), leave (exit yourself from current game)"],
   "normal_rules":
-          ["Normal Rules:\nFree for all,\nFirst person to guess the phrase is the winner!"],
+          ["Normal Rules:",
+            "Free for all,",
+            "First person to guess the phrase is the winner!"],
   "turn_rules":
-          ["Turn Rules:\nMust join to play,\nEvery correct letter guess gives you a point for how many times letter was in phrase.\nAnswering phrase correctly gives 5 points.\nPerson with most points at the end of the game is the winner!"],
+          ["Turn Rules:",
+            "Must join to play,",
+            "Every correct letter guess gives you a point for how many times letter was in phrase.",
+            "Answering phrase correctly gives 5 points.",
+            "Person with most points at the end of the game is the winner!"],
   "reveal_rules":
-          ["Reveal Rules:\nFree for all,\nLetters are slowly revealed to the players.\nFirst person to guess the phrase is the winner!"],
+          ["Reveal Rules:",
+            "Free for all,",
+            "Letters are slowly revealed to the players.",
+            "First person to guess the phrase is the winner!"],
   "start":
           ["Has started a game.", "Has begun a game.", "Has started a battle of wits.", "Challenges the co-ops to defeat him/her.", "Wants everyone to let him win this game.", "I secretly hoping that he will win this game."],
   "in_game":

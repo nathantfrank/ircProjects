@@ -228,7 +228,8 @@ class HangmanBot(Bot):
             return
 
     def info(self, prefix, info_type):
-            self.msg(prefix, self.responses.get(info_type))
+        for line in self.responses.get(info_type):
+            self.msg(prefix, line)
 
     def make_game(self, version, prefix):
         self.game = Game(version, self.phrases)
@@ -246,7 +247,8 @@ class HangmanBot(Bot):
             self.start_game()
 
     def alert(self):
-        self.say("#main", "A game has started in: %s" % self.factory.channel)
+        for channel in self.factory.other_channels:
+            self.say(channel, "A game has started in: %s" % self.factory.channel)
 
     def start_game(self):
         self.in_game = True
@@ -401,7 +403,8 @@ class HangmanBot(Bot):
                 self.command(prefix, msg)
 
     def signedOn(self):
-        self.join("main")
+        for channel in self.factory.other_channels:
+            self.join(channel)
         self.join(self.factory.channel)
         print "Signed on as %s." % self.nickname
 
@@ -409,12 +412,14 @@ class HangmanBot(Bot):
 class HangmanBotFactory(BotFactory):
     protocol = HangmanBot
 
-    def __init__(self, channel, nickname):
+    def __init__(self, channel, nickname, other_channels):
         BotFactory.__init__(self, channel, nickname)
+        self.other_channels = other_channels
 
 if __name__ == "__main__":
     host = "coop.test.adtran.com"
     port = 6667
     chan = "THE_MAGIC_CONCH_ROOM"  # "THE_MAGIC_CONCH_ROOM" "test" "main"
-    reactor.connectTCP(host, port, HangmanBotFactory("#" + chan, "Hm"))
+    other_channels = ["#main"]
+    reactor.connectTCP(host, port, HangmanBotFactory("#" + chan, "Hm", other_channels))
     reactor.run()
