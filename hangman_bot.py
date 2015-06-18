@@ -1,13 +1,14 @@
 import random
 import re
 # import argparse
-# import json
+import json
 import yaml
+import operator
 
 from twisted_bot import Bot, BotFactory
 from twisted.internet import reactor
 """
-saving scores and winners
+add reset or quit
 pick topic
 pick topic and phrase
 add topic
@@ -186,6 +187,10 @@ class HangmanBot(Bot):
             self.phrases = yaml.safe_load(phrase_dict)
         with open("hm_resp_dict.json") as resp_dict:
             self.responses = yaml.safe_load(resp_dict)
+        with open("hm_scores_dict.json") as score_dict:
+            self.scores = yaml.safe_load(score_dict)
+            if not self.scores:
+                self.scores = {}
 
     def add_player(self, prefix):
         if self.wait or self.in_game and self.game.get_version() == "turn":
@@ -194,7 +199,7 @@ class HangmanBot(Bot):
                 self.respond("join", prefix)
 
     def remove_player(self, prefix):
-        if self.wait or self.in_game:
+        if self.wait or self.in_game and self.game.get_version() == "turn":
             player_removed = self.game.remove_player_from_game(prefix)
             if player_removed:
                 self.respond("leave", prefix)
@@ -203,12 +208,14 @@ class HangmanBot(Bot):
     def command(self, prefix, msg):
         if "help" in msg:
             self.info(prefix, "help")
+        if "scores" in msg:
+            self.show_lifetime_scores()
         elif "normal rules" in msg:
             self.info(prefix, "normal_rules")
         elif "turn rules" in msg:
             self.info(prefix, "turn_rules")
-        elif "leave" in msg and self.in_game and self.turns:
-            self.remove_player(prefix)
+        elif "reveal rules" in msg:
+            self.info(prefix, "reveal_rules")
         elif "normal play" in msg and not self.in_game:
             self.make_game("normal", prefix)
         elif "turn play" in msg and not self.in_game:
@@ -221,11 +228,11 @@ class HangmanBot(Bot):
             return
 
     def info(self, prefix, info_type):
-        for msg in self.responses.get(info_type):
-            self.msg(prefix, msg)
+            self.msg(prefix, self.responses.get(info_type))
 
     def make_game(self, version, prefix):
         self.game = Game(version, self.phrases)
+        self.alert()
         self.respond("start", prefix)
         if version == "normal":
             self.start_game()
@@ -237,6 +244,9 @@ class HangmanBot(Bot):
         elif version == "reveal":
             self.game.reveal_starting_letters()
             self.start_game()
+
+    def alert(self):
+        self.say("#main", "A game has started in: %s" % self.factory.channel)
 
     def start_game(self):
         self.in_game = True
@@ -272,11 +282,34 @@ class HangmanBot(Bot):
                      "Category,  %s\nPhrase,  %s\nUsed Letters,  %s" %
                      (category, phrase, letters))
 
-    def show_score(self):
-        score_sheet = "Scores, "
+    def show_lifetime_scores(self):
+        if self.scores:
+            score_sheet = "Rankings, "
+            sort_players = sorted(self.scores.items(), key=operator.itemgetter(1), reverse=True)
+            for pair in sort_players:
+                score_sheet += "\n%s: %s" % (pair[0], pair[1])
+            self.say(self.factory.channel, score_sheet)
+
+    def show_game_score(self):
+        game_sheet = "Game Scores, "
         for player in self.game.get_players():
-            score_sheet += "\n%s: %s" % (player.get_name(), player.get_points())
-        self.say(self.factory.channel, score_sheet)
+            game_sheet += "\n%s: %s" % (player.get_name(), player.get_points())
+        self.say(self.factory.channel, game_sheet)
+
+    def save_scores(self, prefix=""):
+        if prefix:
+            if prefix in self.scores:
+                self.scores[prefix] = int(self.scores[prefix]) + 10
+            else:
+                self.scores[prefix] = 10
+        else:
+            for player in self.game.get_players():
+                if player.get_name() in self.scores:
+                    self.scores[player.get_name()] = int(self.scores[player.get_name()]) + player.get_points()
+                else:
+                    self.scores[player.get_name()] = player.get_points()
+        with open("hm_scores_dict.json", "w") as score_dict:
+            json.dump(self.scores, score_dict)
 
     def respond(self, resp_type, prefix=""):
         if prefix:
@@ -285,23 +318,32 @@ class HangmanBot(Bot):
 
     def guess(self, prefix, msg, answer):
         if answer:
-            if msg == self.game.get_answer().lower():
-                self.game.won(prefix)
-                if self.game.get_version() == "normal" or self.game.get_version() == "reveal":
-                    self.respond("win", prefix)
-                elif self.game.get_version() == "turn":
-                    self.respond("right", prefix)
-                    self.show_score()
-                self.in_game = False
-                if self.game.get_version() != "normal":
-                    if self.call_id.active():
-                        self.call_id.cancel()
-            else:
-                print msg
-                print self.game.get_answer()
-                self.respond("wrong", prefix)
-                reactor.callLater(3, self.show_standings)
-        elif self.game.get_version() == "turn":
+            self.attempt_answer(prefix, msg)
+        else:
+            self.guess_letter(prefix, msg)
+
+    def attempt_answer(self, prefix, msg):
+        if msg == self.game.get_answer().lower():
+            self.game.won(prefix)
+            if self.game.get_version() == "normal" or self.game.get_version() == "reveal":
+                self.save_scores(prefix)
+                self.respond("win", prefix)
+            elif self.game.get_version() == "turn":
+                self.save_scores()
+                self.respond("right", prefix)
+                self.show_game_score()
+            self.in_game = False
+            if self.game.get_version() != "normal":
+                if self.call_id.active():
+                    self.call_id.cancel()
+        else:
+            print msg
+            print self.game.get_answer()
+            self.respond("wrong", prefix)
+            reactor.callLater(3, self.show_standings)
+
+    def guess_letter(self, prefix, msg):
+        if self.game.get_version() == "turn":
             if prefix == self.game.get_current_turn().get_name():
                 self.next_turn()
                 if len(msg) == 1:
@@ -313,6 +355,7 @@ class HangmanBot(Bot):
                 self.update_standings(msg, prefix)
             else:
                 self.respond("not_letter", prefix)
+                reactor.callLater(3, self.show_standings)
 
     def update_standings(self, letter, prefix):
         if letter in self.game.get_answer().lower() and letter not in self.game.get_used_letters():
@@ -328,11 +371,12 @@ class HangmanBot(Bot):
             reactor.callLater(3, self.show_standings)
 
     def privmsg(self, user, channel, msg):
-        if not user:
+        if not user or channel != self.factory.channel:
             return
         com_regex = re.compile(self.first_name + "[ _]" + self.last_name + "[:,]* ?", re.I)
-        guess_regex = re.compile("(guess|answer)" + "([ ]*)" + "([\w~@#$^*()_+=[\]{}|\\,.?: -]*)", re.I)
+        guess_regex = re.compile("(guess|answer)" + "([ ]*)" + "([\w~@#$^*()_+=[\]{}|\\,&'.?: -]*)", re.I)
         join_regex = re.compile("(join)")
+        leave_regex = re.compile("(leave)")
         guess = False
         answer = False
         prefix = "%s" % (user.split("!", 1)[0], )
@@ -346,6 +390,8 @@ class HangmanBot(Bot):
             msg = guess_regex.search(msg).group(3).lower()
         elif join_regex.search(msg):
             self.add_player(prefix)
+        elif leave_regex.search(msg):
+            self.remove_player(prefix)
         else:
             prefix = ""
         if prefix:
@@ -353,6 +399,11 @@ class HangmanBot(Bot):
                 self.guess(prefix, msg, answer)
             else:
                 self.command(prefix, msg)
+
+    def signedOn(self):
+        self.join("main")
+        self.join(self.factory.channel)
+        print "Signed on as %s." % self.nickname
 
 
 class HangmanBotFactory(BotFactory):
@@ -364,6 +415,6 @@ class HangmanBotFactory(BotFactory):
 if __name__ == "__main__":
     host = "coop.test.adtran.com"
     port = 6667
-    chan = "THE_MAGIC_CONCH_ROOM"  # "THE_MAGIC_CONCH_ROOM" "test"
+    chan = "THE_MAGIC_CONCH_ROOM"  # "THE_MAGIC_CONCH_ROOM" "test" "main"
     reactor.connectTCP(host, port, HangmanBotFactory("#" + chan, "Hm"))
     reactor.run()
