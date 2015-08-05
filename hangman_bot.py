@@ -175,6 +175,9 @@ class Game:
     def get_players(self):
         return self.players
 
+    def get_category(self):
+        return self.category.upper()
+
 
 class HangmanBot(Bot):
 
@@ -246,6 +249,9 @@ class HangmanBot(Bot):
             self.game.reveal_starting_letters()
             self.start_game()
 
+    def display_category(self):
+        self.topic(self.factory.channel, "Category:   %s" % self.game.get_category())
+
     def alert(self):
         for channel in self.factory.other_channels:
             self.say(channel, "A game has started in: %s" % self.factory.channel)
@@ -253,6 +259,7 @@ class HangmanBot(Bot):
     def start_game(self):
         self.in_game = True
         self.wait = False
+        self.display_category()
         self.show_standings()
         if self.game.get_version() == "turn":
             self.call_id = reactor.callLater(15, self.next_turn)
@@ -274,15 +281,16 @@ class HangmanBot(Bot):
             self.call_id.reset(15)
 
     def show_standings(self):
+        # need to fix the getting variables
         category, phrase, letters = self.game.get_standings()
         if self.game.get_version() == "turn":
             self.say(self.factory.channel,
-                     "Category,  %s\nPhrase,  %s\nUsed Letters,  %s\nCurrent Turn,  %s" %
-                     (category, phrase, letters, self.game.get_current_turn().get_name()))
+                     "Phrase,  %s\nUsed Letters,  %s\nCurrent Turn,  %s" %
+                     (phrase, letters, self.game.get_current_turn().get_name()))
         else:
             self.say(self.factory.channel,
-                     "Category,  %s\nPhrase,  %s\nUsed Letters,  %s" %
-                     (category, phrase, letters))
+                     "Phrase,  %s\nUsed Letters,  %s" %
+                     (phrase, letters))
 
     def show_lifetime_scores(self):
         if self.scores:
@@ -419,7 +427,7 @@ class HangmanBotFactory(BotFactory):
 if __name__ == "__main__":
     host = "coop.test.adtran.com"
     port = 6667
-    chan = "THE_MAGIC_CONCH_ROOM"  # "THE_MAGIC_CONCH_ROOM" "test" "main"
-    other_channels = ["#main"]
+    chan = "game"  # "THE_MAGIC_CONCH_ROOM" "test" "main"
+    other_channels = ["#main", "#THE_MAGIC_CONCH_ROOM"]
     reactor.connectTCP(host, port, HangmanBotFactory("#" + chan, "Hm", other_channels))
     reactor.run()

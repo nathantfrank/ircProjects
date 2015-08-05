@@ -21,27 +21,27 @@
             "Letters are slowly revealed to the players.",
             "First person to guess the phrase is the winner!"],
   "start":
-          ["Has started a game.", "Has begun a game.", "Has started a battle of wits.", "Challenges the co-ops to defeat him/her.", "Wants everyone to let him win this game.", "I secretly hoping that he will win this game."],
+          ["Has started a game.", "Has begun a game.", "Has started a battle of wits.", "Challenges the co-ops to defeat him/her.", "Wants everyone to let him/her win this game.", "Is secretly hoping that he/she will win this game."],
   "in_game":
           ["A game has already started.", "A game is in progress.", "You dimwit! Can't you see we are playing.", "Please stop bother me.", "What is your problem? We are in a game.", "I shall forgive you this time."],
   "win":
-          ["Has won the game.", "Is victorious!", "Thinks he is better than all of you!", "Reigns supreme!", "Has been crowned the Victor.", "Is the fairest of them all."],
+          ["Has won the game.", "Is victorious!", "Thinks he/she is better than all of you!", "Reigns supreme!", "Has been crowned the Victor.", "Is the fairest of them all."],
   "right":
-          ["Has answered correctly.", "Has done the impossible.", "Has ended his bad luck!", "Beat everyone else to the punch.", "Is faster at typing than you.", "Has won at least 5 points!"],
+          ["Has answered correctly.", "Has done the impossible.", "Has ended his/her bad luck!", "Beat everyone else to the punch.", "Is faster at typing than you.", "Has won at least 5 points!"],
   "wrong":
-          ["Has answered incorrectly.", "Wow, wrong again!", "How does it feel to be wrong?", "Has probably been playing with his eyes closed.", "Is crying in a corner right now.", "Apparently, thinks by this is the random typing game."],
+          ["Has answered incorrectly.", "Wow, wrong again!", "How does it feel to be wrong?", "Has probably been playing with his/her eyes closed.", "Is crying in a corner right now.", "Apparently, thinks by this is the random typing game."],
   "not_letter":
-          ["Incorrect value for letter.", "Wow really, not even an option.", "Can you please not finger fumble?", "Is not as smart as he/she appears.", "Needs to learn the alphabet.", "Hopes no one saw he didn't pick a letter."],
+          ["Incorrect value for letter.", "Wow really, not even an option.", "Can you please not finger fumble?", "Is not as smart as he/she appears.", "Needs to learn the alphabet.", "Hopes no one saw he/she didn't pick a letter."],
   "correct":
           ["Has guessed correctly.", "RNGezus has saved you.", "Is smarter than he/she appears.", "Is hustling everyone here.", "Is a try hard.", "Is probably cheating."],
   "used":
-          ["Has guessed a previous letter.", "Why would you guess a letter that has already been used?", "Please use your eyes next time", "Is forfeiting his chance to earn points"],
+          ["Has guessed a previous letter.", "Why would you guess a letter that has already been used?", "Please use your eyes next time", "Is forfeiting his/her chance to earn points"],
   "incorrect":
-          ["Has guessed incorrectly.", "Has no luck.", "Is wrong again.", "Will never get one right.", "Recieves no points this time!", "HaHa, Wrong!", "Wishes he/she could get one right."],
+          ["Has guessed incorrectly.", "Has no luck.", "Is wrong again.", "Will never get one right.", "Receives no points this time!", "HaHa, Wrong!", "Wishes he/she could get one right."],
   "join":
-          ["Has joined the game.", "Wants to challenge!", "Thinks he has a chance of winning.", "Is just playing for fun.", "Likes to escape from what he/she should be doing.", "Has nothing better to do."],
+          ["Has joined the game.", "Wants to challenge!", "Thinks he/she has a chance of winning.", "Is just playing for fun.", "Likes to escape from what he/she should be doing.", "Has nothing better to do."],
   "join_now":
           ["Players please join now.", "Knights come to the Round Table.", "Be a part of the game of the Century!", "If you join now you can join for free!"],
   "leave":
-          ["Has left the game.", "Doesn't like to have fun.", "Hates his life.", "Must've gotten caught not working.", "Has gone back to pretending to work.", "Has forfeited his right to the crown!"]
+          ["Has left the game.", "Doesn't like to have fun.", "Hates his/her life.", "Must've gotten caught not working.", "Has gone back to pretending to work.", "Has forfeited his/her right to the crown!"]
 }
