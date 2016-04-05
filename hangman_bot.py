@@ -427,7 +427,7 @@ class HangmanBotFactory(BotFactory):
 if __name__ == "__main__":
     host = "coop.test.adtran.com"
     port = 6667
-    chan = "game"  # "THE_MAGIC_CONCH_ROOM" "test" "main"
-    other_channels = ["#main", "#THE_MAGIC_CONCH_ROOM"]
+    chan = "HM_Room"  # "THE_MAGIC_CONCH_ROOM" "test" "main"
+    other_channels = []
     reactor.connectTCP(host, port, HangmanBotFactory("#" + chan, "Hm", other_channels))
     reactor.run()
